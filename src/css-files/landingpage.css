@@ -33,6 +33,34 @@ body {
     height: var(--full-height);
 }
 
+#title-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 10vh;
+    font-weight: 600;
+    background-color: var(--light-red-color);
+    border-bottom: 1px solid black;
+}
+
+#project-list ul {
+    list-style-type: none;
+}
+
+ul > li {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+}
+
+.icon-div {
+    text-align: right;
+    padding-right: 1vw;
+}
+
+.name-div {
+    text-align: left;
+}
+
 /* Project Container and subsequent items */
 
 #project-container {
