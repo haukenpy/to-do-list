@@ -1,0 +1,34 @@
+:root {
+    --full-width: 98.5vw;
+    --full-height: 98.5vh;
+    --font-size-large: 1.5em;
+    --font-size-medium: 1em;
+    --font-size-small: 0.7em;
+}
+
+body {
+    background-color: black;
+    height: var(--full-height);
+    width: var(--full-width);
+    margin: 1px;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr, 4fr;
+    grid-auto-flow: column;
+
+    font-size: var(--font-size-large);
+}
+
+#nav-panel {
+    background-color: white;
+    width: 15vw;
+    height: var(--full-height);
+}
+
+#project-container {
+    background-color: cyan;
+    height: var(--full-height);
+    width: 85vw;
+}
