@@ -2,7 +2,7 @@
     --full-width: 98.5vw;
     --full-height: 98.5vh;
     --font-size-large: 1.5em;
-    --font-size-medium: 1em;
+    --font-size-medium: 1.2em;
     --font-size-small: 0.7em;
 
     --light-red-color: #ffaaa5; 
@@ -36,7 +36,6 @@ body {
 /* Project Container and subsequent items */
 
 #project-container {
-    padding-left: 0.2vw;
     background-color: var(--white-color);
     height: var(--full-height);
     width: 84vw;
@@ -46,21 +45,31 @@ table {
     width: 100%;
 }
 
+table td:first-child, th:first-child {
+    border-left: none;
+}
+
+th, td {
+    border-left: 1px solid black;
+    padding: 0.2em 0.5em;
+}
+
 tr {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    padding: 0.1em;
-}
-
-thead>tr:nth-child(1) {
-    font-weight: 600;
-    background-color: var(--light-red-color);
-}
-
-tr {
     background-color: var(--white-color);
 }
 
 tr:nth-child(even) {
     background-color: var(--light-orange-color);
 }
+
+th {
+    background-color: var(--light-red-color);
+    font-size: var(--font-size-medium);
+}
+
+td {
+    text-align: center;
+}
+
