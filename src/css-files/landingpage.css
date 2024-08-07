@@ -52,6 +52,10 @@ ul > li {
     grid-template-columns: 1fr 2fr;
 }
 
+.name-div:hover {
+    background-color: green;
+}
+
 .icon-div {
     text-align: right;
     padding-right: 1vw;

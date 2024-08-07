@@ -1,9 +1,12 @@
 import './css-files/landingpage.css';
+import { projectHandler } from './js-files/projectHandler.js';
+import './js-files/render.js';
+import { tableHandler } from './js-files/tableHandler.js';
 
-const testFunc = function() {
-    console.log("Hello, world");
-    const titleDiv = document.querySelector("#title-div");
-    docObj.textContent = "This is a test";
-}
 
-testFunc();
+const tableH = new tableHandler();
+const projectH = new projectHandler();
+projectH.assignProperties();
+tableH.assignProperties();
+
+projectH.newProject();
