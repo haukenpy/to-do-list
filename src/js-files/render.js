@@ -1,16 +1,19 @@
 import { tableHandler } from './tableHandler.js';
 import { projectHandler } from './projectHandler.js';
+import { modalHandler } from './modalHandler.js';
 
 export default (function () {
 
     const tableH = new tableHandler();
     const projectH = new projectHandler();
+    const modalH = new modalHandler();
+
+    // modal
+    modalH.renderModal();
 
     // nav-panel
-    projectH.renderProjects();
+    projectH.renderProjectSection(modalH);
     projectH.assignProperties();
-
-    projectH.newProject();
  
     // table
     tableH.renderTable();

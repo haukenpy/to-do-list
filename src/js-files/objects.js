@@ -2,7 +2,6 @@ function project(title) {
     this.title = title;
     this.icon = "#";
     this.todo = [];
-
 }
 
 function toDo(title, description, priority, createdDate, dueDate) {
@@ -18,4 +17,11 @@ function toDo(title, description, priority, createdDate, dueDate) {
     }
 };
 
-export {project, toDo};
+function domHandler() {
+    this.object = [];
+    this.modalHeader;
+    this.modalBody;
+      
+};
+
+export {project, toDo, domHandler};
