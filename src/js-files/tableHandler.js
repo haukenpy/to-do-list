@@ -1,18 +1,21 @@
-class tableHandler {
+import { pubsub } from "./pubsub";
 
-    constructor() {
-        this.tableHeaders = ["Title", "Description", "Priority", "Created Date", "Due Date", "Completed"];
-        this.toDoArr = [];
-    }
+export const tableHandler = {
 
+        tableHeaders: ["Title", "Description", "Priority", "Created Date", "Due Date", "Completed"],
+        toDoArr: [],
+        contentDiv: document.querySelector(".content"),
+        table: "",
+    
     /* Methods */
+    setTable: function(value) {
+        this.table = value;
+    },
 
-    assignProperties = () => {
-        this.table = document.querySelector("#to-do-table");
-        this.contentDiv = document.querySelector(".content")
-    }
+    renderTable: function() {
 
-    renderTable = function () {
+        pubsub.subscribe("newToDo", this.newToDo);
+
         const toDoTable = document.createElement("div");
         const table = document.createElement("table");
         const thead = document.createElement("thead");
@@ -21,7 +24,7 @@ class tableHandler {
         toDoTable.id = "project-container";
         table.id = "to-do-table";
 
-        this.assignProperties();
+        this.table = table;
 
         let thRow = thead.insertRow(-1);
 
@@ -34,17 +37,20 @@ class tableHandler {
         toDoTable.appendChild(table);
         table.append(thead, tbody);
         this.contentDiv.appendChild(toDoTable);
-    }
+    },
 
-    newTableRow = (title, description, priority, createdDate, dueDate) => {
-        const row = this.table.insertRow(-1);
+    newTableRow: function(title, description, priority, createdDate, dueDate) {
+        const row = tableHandler.table.insertRow(-1);
         row.insertCell().textContent = title;
         row.insertCell().textContent = description;
         row.insertCell().textContent = priority;
         row.insertCell().textContent = createdDate;
         row.insertCell().textContent = dueDate;
         row.insertCell().textContent = "[]";
-    }
-};
+    },
 
-export { tableHandler }
+    newToDo: function(toDo) {
+        tableHandler.newTableRow(toDo.title, toDo.description, toDo.priority, toDo.dueDate, toDo.createdDate);
+    },
+
+};

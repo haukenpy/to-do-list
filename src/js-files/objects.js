@@ -4,7 +4,8 @@ function project(title) {
     this.todo = [];
 }
 
-function toDo(title, description, priority, createdDate, dueDate) {
+function toDo(projectTitle, title, description, priority, createdDate, dueDate) {
+    this.project = projectTitle;
     this.title = title;
     this.description = description;
     this.priority = priority;
@@ -17,11 +18,4 @@ function toDo(title, description, priority, createdDate, dueDate) {
     }
 };
 
-function domHandler() {
-    this.object = [];
-    this.modalHeader;
-    this.modalBody;
-      
-};
-
-export {project, toDo, domHandler};
+export {project, toDo};

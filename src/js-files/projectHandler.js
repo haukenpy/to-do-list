@@ -1,58 +1,67 @@
-import { project } from './objects.js';
+import { pubsub } from './pubsub.js';
 
-function projectHandler() {
+export const projectHandler = {
  
-    this.defaultTextArr = ["Search", "Inbox", "Today", "Projects"];
-    this.projects = [];
-    this.navUl;
-    this.projectListDiv;
-    this.contentDiv;
+    defaultTextArr: ["Search", "Inbox", "Today", "Projects"],
+    projects: [],
+    navUl: "",
 
     /* Methods */
-    this.newProject = (modalHandler) => {
+    deleteProject: ev => {
+        let item = ev.target.closest('li');
+        let name = ev.target.name;
 
-        modalHandler.renderForm();
-        modalHandler.displayModal();
-    };
+        console.log(name);
+        item.parentElement.removeChild(item);
+    },
 
-    this.assignProperties = () => {
-        this.contentDiv = document.querySelector(".content");
-    };
+    addNewProject: function(project) {
+        projectHandler.projects.push(project);
+        projectHandler.renderProject(project.title, true);
+        console.log(projectHandler.projects.length);
+    },
 
-    this.renderProjectSection = function(modalHandler) {
+    renderProjectSection: () => {
+
+        pubsub.subscribe("newProject", projectHandler.addNewProject);
         const navPanel = document.createElement("div");
         const titleDiv = document.createElement("div");
-        const projectListDiv = document.createElement("div");
-        const navList = document.createElement("ul");
+        const plDiv = document.createElement("div");
+        const navUl = document.createElement("ul");
         const addBtn = document.createElement("button");
+        const addToDo = document.createElement("button");
+
+        const contentDiv = document.querySelector(".content");
 
         navPanel.id = "nav-panel";
         titleDiv.id = "title-div";
-        projectListDiv.id = "project-list";
-        navList.classList = "project-ul";
+        plDiv.id = "project-list";
+        navUl.classList = "project-ul";
         addBtn.id = "add-project";
+        addToDo.id = "to-do-btn";
     
         titleDiv.textContent = "To do list";
         addBtn.textContent = "Add Project";
+        addToDo.textContent = "Add To-Do";
 
-        this.navUl = navList;
-        this.projectListDiv = projectListDiv;
-        this.contentDiv = document.querySelector(".content");
-
-        this.contentDiv.appendChild(navPanel);
-        navPanel.append(titleDiv, projectListDiv);
-        projectListDiv.append(addBtn, navList);
+        contentDiv.appendChild(navPanel);
+        navPanel.append(titleDiv, plDiv);
+        plDiv.append(addBtn, addToDo, navUl);
 
         addBtn.addEventListener("click", () => {
-            this.newProject(modalHandler)
+            pubsub.publish("addProjectBtn");
         });
 
-        for (let entry of this.defaultTextArr) {
-            this.renderProject(entry);
-        }
-    };
+        addToDo.addEventListener("click", () => {
+            pubsub.publish("addToDo");
+        });
 
-    this.renderProject = (title) => {
+        for (let entry of projectHandler.defaultTextArr) {
+            projectHandler.renderProject(entry, false);
+        }
+    },
+
+    renderProject: (title, bool) => {
         let li = document.createElement("li");
         let idiv = document.createElement("div");
         let tdiv = document.createElement("div");
@@ -60,12 +69,13 @@ function projectHandler() {
         idiv.classList = "icon-div";
         tdiv.classList = "name-div";
 
+        if (bool) {idiv.addEventListener("click", projectHandler.deleteProject);};
+
         idiv.textContent = "#";
         tdiv.textContent = title;
 
-        this.navUl.appendChild(li);
+        const navUl = document.querySelector(".project-ul");
+        navUl.appendChild(li);
         li.append(idiv, tdiv);
-    }
+    },
 };
-
-export { projectHandler }

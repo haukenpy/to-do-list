@@ -1,17 +1,22 @@
 import './../css-files/modal.css';
-import { project } from './objects.js';
+import { project, toDo } from './objects.js';
+import { projectHandler } from './projectHandler.js';
+import { pubsub } from './pubsub.js';
+import { tableHandler } from './tableHandler.js';
 
-function modalHandler() {
-    this.mBody;
-    this.mHeader;
-    this.mDiv;
-    this.title;
-    this.description;
-    this.dueDate;
-    this.forms = [];
+export const modalHandler = {
+
+    mDiv: "",
+    title: "",
+    description: "",
+    dueDate: "",
 
     /* Methods */
-    this.renderModal = function() {
+    renderModal: function() {
+
+        pubsub.subscribe("addProjectBtn", this.renderForm);
+        pubsub.subscribe("addToDo", this.renderToDoForm);
+
         // DOM creation
         const contentDiv = document.querySelector(".content");
         const modalDiv = document.createElement("div");
@@ -34,6 +39,7 @@ function modalHandler() {
         // Bind events
         span.addEventListener("click", () => {
             this.hideModal();
+            this.clearForm();
         });
 
         // Append elements
@@ -46,9 +52,9 @@ function modalHandler() {
         this.mHeader = modalHeader;
         this.mDiv = modalDiv;
 
-    }
+    },
 
-    this.renderForm = function() {
+    renderForm: function() {
 
         const form = document.createElement("form");
         const titleInput = document.createElement("input");
@@ -76,41 +82,119 @@ function modalHandler() {
     
         submitBtn.textContent = "Submit";
         submitBtn.addEventListener("click", () => {
-             this.submitForm();
+             modalHandler.submitForm();
             });
     
         form.append(titleInput, descriptionInput, dueDateInput, submitBtn)
     
-        this.mBody.appendChild(form);
+        modalHandler.mBody.appendChild(form);
 
-        this.title = titleInput;
-        this.description = descriptionInput;
-        this.dueDate = dueDateInput;
-    }
+        modalHandler.title = titleInput;
+        modalHandler.description = descriptionInput;
+        modalHandler.dueDate = dueDateInput;
 
-    this.submitForm = () => {
+        modalHandler.displayModal();
+    },
 
-        let prj = new project("test-project");
-        prj.title = this.title.value;
-        prj.description = this.description.value;
-        prj.dueDate = this.dueDate.value;
-        this.forms.push(prj);
+    renderToDoForm: function () {
+
+        const form = document.createElement("form");
+        const projectTitle = document.createElement("input");
+        const titleInput = document.createElement("input");
+        const descriptionInput = document.createElement("input");
+        const dueDateInput = document.createElement("input");
+        const createdDate = document.createElement("input");
+        const submitBtn = document.createElement("button");
+    
+        submitBtn.id = "submit-button";
+    
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "submit");
+    
+        projectTitle.setAttribute("type", "text");
+        projectTitle.setAttribute("name", "project-title");
+        projectTitle.setAttribute("placeholder", "Select project");
+
+        titleInput.setAttribute("type", "text");
+        titleInput.setAttribute("name", "title");
+        titleInput.setAttribute("placeholder", "Enter title");
+    
+        descriptionInput.setAttribute("type", "text");
+        descriptionInput.setAttribute("name", "description");
+    
+        dueDateInput.setAttribute("type", "text");
+        dueDateInput.setAttribute("name", "dueDate");
+
+        createdDate.setAttribute("type", "text");
+        createdDate.setAttribute("name", "created-date");
+    
+        submitBtn.setAttribute("type", "button");
+        submitBtn.setAttribute("name", "submit");
+    
+        submitBtn.textContent = "Submit";
+        submitBtn.addEventListener("click", () => {
+             modalHandler.submitToDoForm();
+            });
+    
+        form.append(projectTitle, titleInput, descriptionInput, dueDateInput, createdDate, submitBtn);
+    
+        modalHandler.mBody.appendChild(form);
+
+        modalHandler.projectTitle = projectTitle;
+        modalHandler.title = titleInput;
+        modalHandler.description = descriptionInput;
+        modalHandler.dueDate = dueDateInput;
+        modalHandler.createdDate = createdDate;
+        modalHandler.displayModal();
+    },
+
+    submitToDoForm: function() {
+
+        let newToDo = new toDo();
+        newToDo.projectTitle = modalHandler.projectTitle.value;
+
+        for (let phproject of projectHandler.projects) {
+            if (newToDo.projectTitle == phproject.title) {
+                newToDo.title = modalHandler.title.value;
+                newToDo.priority = "Low";
+                newToDo.createdDate = "20240810";
+                newToDo.description = modalHandler.description.value;
+                newToDo.dueDate = modalHandler.dueDate.value;
+
+                phproject.todo.push(newToDo);
+                pubsub.publish('newToDo', newToDo);
+                
+                this.clearForm();
+                this.hideModal();
+                return;
+            }
+        }
+        alert("Hello World");
+    },
+
+    submitForm: function() {
+
+        let prj = new project();
+        prj.title = modalHandler.title.value;
+        if (prj.title) {
+            prj.description = modalHandler.description.value;
+            prj.dueDate = modalHandler.dueDate.value;
+            pubsub.publish('newProject', prj);
+        }
 
         this.clearForm();
         this.hideModal();
-    }
+    },
 
-    this.displayModal = () => {
+    displayModal: function() {
         this.mDiv.style.display = "block";
-    }
+    },
 
-    this.hideModal = () => {
+    hideModal: function() {
         this.mDiv.style.display = "none";
-    }
+    },
 
-    this.clearForm = () => {
+    clearForm: function() {
         this.mBody.innerHTML = "";
-    }
+    },
 };
-
-export { modalHandler }
