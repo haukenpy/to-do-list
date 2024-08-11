@@ -163,13 +163,13 @@ export const modalHandler = {
 
                 phproject.todo.push(newToDo);
                 pubsub.publish('newToDo', newToDo);
-                
+
                 this.clearForm();
                 this.hideModal();
                 return;
             }
         }
-        alert("Hello World");
+        alert("Project does not exist.");
     },
 
     submitForm: function() {
