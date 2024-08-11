@@ -10,15 +10,16 @@ export const projectHandler = {
     deleteProject: ev => {
         let item = ev.target.closest('li');
         let name = ev.target.name;
+        
+        projectHandler.projects = projectHandler.projects.filter(prj => prj.title != name);
 
-        console.log(name);
+        console.log(projectHandler.projects);
         item.parentElement.removeChild(item);
     },
 
     addNewProject: function(project) {
         projectHandler.projects.push(project);
         projectHandler.renderProject(project.title, true);
-        console.log(projectHandler.projects.length);
     },
 
     renderProjectSection: () => {
@@ -68,8 +69,12 @@ export const projectHandler = {
 
         idiv.classList = "icon-div";
         tdiv.classList = "name-div";
+        idiv.name = title;
 
-        if (bool) {idiv.addEventListener("click", projectHandler.deleteProject);};
+        if (bool) {
+            idiv.addEventListener("click", projectHandler.deleteProject);
+            tdiv.addEventListener("click", projectHandler.displayProjectToDo);
+        };
 
         idiv.textContent = "#";
         tdiv.textContent = title;
@@ -77,5 +82,17 @@ export const projectHandler = {
         const navUl = document.querySelector(".project-ul");
         navUl.appendChild(li);
         li.append(idiv, tdiv);
+    },
+
+    displayProjectToDo: (ev) => {
+        ev.stopPropagation();
+        let name = ev.target.textContent;
+        pubsub.publish("clearTable");
+
+        for (let prj of projectHandler.projects) {
+            if (name == prj.title) {
+                pubsub.publish("appendRow", prj.todo);
+            }
+        }
     },
 };

@@ -15,6 +15,8 @@ export const tableHandler = {
     renderTable: function() {
 
         pubsub.subscribe("newToDo", this.newToDo);
+        pubsub.subscribe("clearTable", this.clearTable);
+        pubsub.subscribe("appendRow", this.appendRows);
 
         const toDoTable = document.createElement("div");
         const table = document.createElement("table");
@@ -25,6 +27,7 @@ export const tableHandler = {
         table.id = "to-do-table";
 
         this.table = table;
+        this.tbody = tbody;
 
         let thRow = thead.insertRow(-1);
 
@@ -40,7 +43,7 @@ export const tableHandler = {
     },
 
     newTableRow: function(title, description, priority, createdDate, dueDate) {
-        const row = tableHandler.table.insertRow(-1);
+        const row = tableHandler.tbody.insertRow(-1);
         row.insertCell().textContent = title;
         row.insertCell().textContent = description;
         row.insertCell().textContent = priority;
@@ -51,6 +54,18 @@ export const tableHandler = {
 
     newToDo: function(toDo) {
         tableHandler.newTableRow(toDo.title, toDo.description, toDo.priority, toDo.dueDate, toDo.createdDate);
+    },
+
+    clearTable: () => {
+        let newTableBody = document.createElement("tbody");
+        tableHandler.tbody.parentNode.replaceChild(newTableBody, tableHandler.tbody);
+        tableHandler.tbody = newTableBody;
+    },
+
+    appendRows: function(prj) {
+        for (let row of prj) {
+            tableHandler.newTableRow(row.title, row.description, row.priority, row.createdDate, row.dueDate);
+        }
     },
 
 };
